@@ -25,3 +25,5 @@ Desktop.ini
 .DS_Store
 
 /icon.icns
+
+.env
