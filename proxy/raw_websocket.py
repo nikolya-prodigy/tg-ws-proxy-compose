@@ -1,5 +1,6 @@
 import os
 import ssl
+import certifi
 import logging
 import base64
 import struct
@@ -21,8 +22,8 @@ _st_BBQ4s = struct.Struct('>BBQ4s')
 _st_H = struct.Struct('>H')
 _st_Q = struct.Struct('>Q')
 
-_ssl_ctx = ssl.create_default_context()
-_ssl_ctx_fronting = ssl.create_default_context()
+_ssl_ctx = ssl.create_default_context(cafile=certifi.where())
+_ssl_ctx_fronting = ssl.create_default_context(cafile=certifi.where())
 _ssl_ctx_fronting.check_hostname = False
 
 class WsHandshakeError(Exception):
@@ -88,7 +89,6 @@ class RawWebSocket:
                       path: str = '/apiws', *,
                       sni: Optional[str] = None, secure = True) -> 'RawWebSocket':
         ssl = _ssl_ctx_fronting if sni else _ssl_ctx
-        print(f"Connecting to {host} with secure={secure}, sni={sni}, path={path}")
 
         if sni is None:
             sni = domain
